@@ -51,7 +51,7 @@ cr.define('cr.ui', function () {
    * <pre>
    * var List = cr.ui.define('list');
    * List.prototype = {
-   *   __proto__: HTMLUListElement.prototype,
+   *   // Set prototype via Object.setPrototypeOf or Object.create(HTMLUListElement.prototype)
    *   decorate: function() {
    *     ...
    *   },
@@ -98,7 +98,7 @@ cr.define('cr.ui', function () {
      * @param {!Element} el The element to decorate.
      */
     f.decorate = function (el) {
-      el.__proto__ = f.prototype;
+      Object.setPrototypeOf(el, f.prototype);
       el.decorate();
     };
 

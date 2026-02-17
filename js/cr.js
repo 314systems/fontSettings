@@ -196,11 +196,24 @@ this.cr = (function () {
 
     let kind = opt_kind || PropertyKind.JS;
 
-    if (!obj.__lookupGetter__(name))
-      obj.__defineGetter__(name, getGetter(name, kind));
+    let descriptor = Object.getOwnPropertyDescriptor(obj, name);
+    if (!descriptor || !descriptor.get) {
+      Object.defineProperty(obj, name, {
+        get: getGetter(name, kind),
+        configurable: true,
+        enumerable: true
+      });
+    }
 
-    if (!obj.__lookupSetter__(name))
-      obj.__defineSetter__(name, getSetter(name, kind, opt_setHook));
+    descriptor = Object.getOwnPropertyDescriptor(obj, name);
+    if (!descriptor || !descriptor.set) {
+      Object.defineProperty(obj, name, {
+        get: descriptor && descriptor.get || getGetter(name, kind),
+        set: getSetter(name, kind, opt_setHook),
+        configurable: true,
+        enumerable: true
+      });
+    }
   }
 
   /**
