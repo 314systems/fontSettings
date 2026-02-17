@@ -20,11 +20,9 @@ limitations under the License.
     <title>Advanced Font Settings</title>
     <script src="js/cr.js"></script>
     <script src="js/cr/ui.js"></script>
-    <script src="js/cr/ui/overlay.js"></script>
     <script src="pending_changes.js"></script>
     <script src="options.js"></script>
     <link rel="stylesheet" href="css/chrome_shared.css" />
-    <link rel="stylesheet" href="css/overlay.css" />
     <link rel="stylesheet" href="css/widgets.css" />
     <link rel="stylesheet" href="css/uber_shared.css" />
     <style>
@@ -154,39 +152,69 @@ limitations under the License.
         color: #fbfafb;
         text-shadow: none;
       }
+
+      dialog {
+        border: 1px solid #d9d9d9;
+        border-radius: 3px;
+        box-shadow: 0 4px 23px 5px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0,0,0,0.15);
+        padding: 0;
+        max-width: 400px;
+      }
+
+      dialog::backdrop {
+        background-color: rgba(255, 255, 255, 0.75);
+      }
+
+      dialog > div:first-child {
+        padding: 14px 17px 14px;
+        color: #333;
+        border-bottom: 1px solid #d9d9d9;
+      }
+
+      dialog h1 {
+        margin: 0;
+        font-size: 120%;
+        text-shadow: white 0 1px 2px;
+      }
+
+      dialog .content-area {
+        padding: 6px 17px 6px;
+        overflow: auto;
+        max-height: 300px;
+      }
+
+      dialog .action-area {
+        display: flex;
+        justify-content: flex-end;
+        padding: 14px 17px;
+        gap: 10px;
+      }
     </style>
   </head>
   <body class="uber-frame">
-    <div id="overlay-container" class="overlay" hidden>
-      <div id="reset-overlay" class="page">
-        <div class="close-button"></div>
-        <div id="reset-this-script-overlay-dialog" hidden>
-          <h1>Reset</h1>
-          <div
-            id="reset-this-script-overlay-dialog-content"
-            class="content-area"
-          ></div>
-          <div class="action-area">
-            <div class="button-strip">
-              <button id="reset-this-script-cancel">Cancel</button>
-              <button id="reset-this-script-ok">Reset</button>
-            </div>
-          </div>
-        </div>
-        <div id="reset-all-scripts-overlay-dialog" hidden>
-          <h1>Reset</h1>
-          <div class="content-area">
-            Are you sure you want to reset all settings?
-          </div>
-          <div class="action-area">
-            <div class="button-strip">
-              <button id="reset-all-cancel">Cancel</button>
-              <button id="reset-all-ok">Reset</button>
-            </div>
-          </div>
-        </div>
+    <dialog id="reset-this-script-dialog">
+      <div>
+        <h1>Reset</h1>
       </div>
-    </div>
+      <div class="content-area" id="reset-this-script-overlay-dialog-content"></div>
+      <div class="action-area">
+        <button id="reset-this-script-cancel">Cancel</button>
+        <button id="reset-this-script-ok">Reset</button>
+      </div>
+    </dialog>
+
+    <dialog id="reset-all-scripts-dialog">
+      <div>
+        <h1>Reset</h1>
+      </div>
+      <div class="content-area">
+        Are you sure you want to reset all settings?
+      </div>
+      <div class="action-area">
+        <button id="reset-all-cancel">Cancel</button>
+        <button id="reset-all-ok">Reset</button>
+      </div>
+    </dialog>
     <div class="page">
       <header style="transform: translateX(0px)">
         <h1>Advanced Font Settings</h1>

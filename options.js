@@ -602,10 +602,13 @@ advancedFonts.clearAllSettings = function () {
 };
 
 /**
- * Closes the overlay.
+ * Closes the currently open dialog.
  */
-advancedFonts.closeOverlay = function () {
-  $('overlay-container').hidden = true;
+advancedFonts.closeDialog = function (dialogId) {
+  const dialog = $(dialogId);
+  if (dialog) {
+    dialog.close();
+  }
 };
 
 /**
@@ -824,39 +827,37 @@ advancedFonts.initApplyAndResetButtons = function () {
     advancedFonts.refresh();
   });
 
-  let overlay = $('overlay-container');
-  cr.ui.overlay.globalInitialization();
-  cr.ui.overlay.setupOverlay(overlay);
-  overlay.addEventListener('cancelOverlay', advancedFonts.closeOverlay);
-
+  // Setup reset-this-script dialog
+  const resetThisScriptDialog = $('reset-this-script-dialog');
   $('reset-this-script-button').onclick = function (event) {
     let scriptList = $('scriptList');
     let scriptName = scriptList.options[scriptList.selectedIndex].text;
     $('reset-this-script-overlay-dialog-content').innerText =
       'Are you sure you want to reset settings for ' + scriptName + ' script?';
-
-    $('overlay-container').hidden = false;
-    $('reset-this-script-overlay-dialog').hidden = false;
-    $('reset-all-scripts-overlay-dialog').hidden = true;
+    resetThisScriptDialog.showModal();
   };
   $('reset-this-script-ok').onclick = function (event) {
     advancedFonts.clearSettingsForScript(advancedFonts.getSelectedScript());
-    advancedFonts.closeOverlay();
+    resetThisScriptDialog.close();
     advancedFonts.refresh();
   };
-  $('reset-this-script-cancel').onclick = advancedFonts.closeOverlay;
+  $('reset-this-script-cancel').onclick = function (event) {
+    resetThisScriptDialog.close();
+  };
 
+  // Setup reset-all-scripts dialog
+  const resetAllScriptsDialog = $('reset-all-scripts-dialog');
   $('reset-all-button').onclick = function (event) {
-    $('overlay-container').hidden = false;
-    $('reset-all-scripts-overlay-dialog').hidden = false;
-    $('reset-this-script-overlay-dialog').hidden = true;
+    resetAllScriptsDialog.showModal();
   };
   $('reset-all-ok').onclick = function (event) {
     advancedFonts.clearAllSettings();
-    advancedFonts.closeOverlay();
+    resetAllScriptsDialog.close();
     advancedFonts.refresh();
   };
-  $('reset-all-cancel').onclick = advancedFonts.closeOverlay;
+  $('reset-all-cancel').onclick = function (event) {
+    resetAllScriptsDialog.close();
+  };
 
   $('import-settings').onclick = advancedFonts.importSettings;
   $('export-settings').onclick = advancedFonts.exportSettings;
