@@ -361,14 +361,17 @@ advancedFonts.refreshFont = function (
 /**
  * Refreshes the UI controls related to a font size setting.
  *
- * @param {{label: HTMLElement, slider: Slider, samples: Array<HTMLElement>}}
+ * @param {{label: HTMLElement, sliderContainer: HTMLElement, samples: Array<HTMLElement>}}
  *     fontSizeSetting The setting object (see advancedFonts.fontSizeSettings).
  * @param size The value of the font size setting.
  * @param controllable Whether the setting can be controlled by this extension.
  */
 advancedFonts.refreshFontSize = function (fontSizeSetting, size, controllable) {
   fontSizeSetting.label.textContent = 'Size: ' + size + 'px';
-  advancedFonts.setFontSizeSlider(fontSizeSetting.slider, size, controllable);
+  let inputElement = fontSizeSetting.sliderContainer.querySelector('input[type="range"]');
+  if (inputElement) {
+    advancedFonts.setFontSizeSlider(inputElement, size, controllable);
+  }
   for (let i = 0; i < fontSizeSetting.samples.length; ++i)
     fontSizeSetting.samples[i].style.fontSize = size + 'px';
 };
@@ -515,14 +518,13 @@ advancedFonts.isControllableLevel = function (levelOfControl) {
 };
 
 /*
- * Updates the specified font size slider's value and enabled property.
- * @param {Slider} slider The slider for a font size setting.
- * @param {number} size The value to set the slider to.
- * @param {boolean} enabled Whether to enable or disable the slider.
+ * Updates the specified font size input's value and enabled property.
+ * @param {HTMLInputElement} inputElement The input element for a font size setting.
+ * @param {number} size The value to set the input to.
+ * @param {boolean} enabled Whether to enable or disable the input.
  */
-advancedFonts.setFontSizeSlider = function (slider, size, enabled) {
-  if (slider.getValue() != size) slider.setValue(size);
-  let inputElement = slider.getInput();
+advancedFonts.setFontSizeSlider = function (inputElement, size, enabled) {
+  if (inputElement.value != size) inputElement.value = size;
   if (enabled) {
     inputElement.parentNode.classList.remove('disabled');
     inputElement.disabled = false;
@@ -534,7 +536,7 @@ advancedFonts.setFontSizeSlider = function (slider, size, enabled) {
 
 /**
  * Initializes the UI control elements related to the font size setting
- * |fontSizeKey| and registers listeners for the user adjusting its slider and
+ * |fontSizeKey| and registers listeners for the user adjusting its input and
  * the setting changing on the browser-side.
  * @param {string} fontSizeKey The key for font size setting. See
  *     PendingChanges.getFont().
@@ -545,21 +547,28 @@ advancedFonts.initFontSizeSetting = function (fontSizeKey) {
   let label = setting.label;
   let samples = setting.samples;
 
-  setting.slider = new Slider(
-    setting.sliderContainer,
-    0,
-    setting.minValue,
-    setting.maxValue,
-    advancedFonts.handleFontSizeSliderChange.bind(null, fontSizeKey)
-  );
+  // Create input[type='range'] element
+  let inputElement = document.createElement('input');
+  inputElement.type = 'range';
+  inputElement.min = setting.minValue;
+  inputElement.max = setting.maxValue;
+  inputElement.value = 0;
+  setting.sliderContainer.appendChild(inputElement);
 
-  let slider = setting.slider;
+  // Register change listener
+  inputElement.addEventListener('change', function () {
+    advancedFonts.handleFontSizeSliderChange(fontSizeKey, inputElement.value);
+  });
+  inputElement.addEventListener('input', function () {
+    advancedFonts.handleFontSizeSliderChange(fontSizeKey, inputElement.value);
+  });
+
   setting.getter({}, function (details) {
     let size = details.pixelSize.toString();
     let controllable = advancedFonts.isControllableLevel(
       details.levelOfControl
     );
-    advancedFonts.setFontSizeSlider(slider, size, controllable);
+    advancedFonts.setFontSizeSlider(inputElement, size, controllable);
     for (let i = 0; i < samples.length; i++)
       samples[i].style.fontSize = size + 'px';
   });
