@@ -14,14 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
   -->
 <!doctype html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>Advanced Font Settings</title>
     <script src="js/cr.js"></script>
     <script src="js/cr/ui.js"></script>
-    <script src="pending_changes.js"></script>
-    <script src="options.js"></script>
+    <script type="module" src="options.js"></script>
     <link rel="stylesheet" href="css/chrome_shared.css" />
     <link rel="stylesheet" href="css/uber_shared.css" />
     <style>
@@ -109,10 +108,6 @@ limitations under the License.
         margin-left: 20px;
       }
 
-      #standardFontSample {
-        font-family: standard;
-      }
-
       #serifFontSample {
         font-family: serif;
       }
@@ -125,22 +120,8 @@ limitations under the License.
         font-family: monospace;
       }
 
-      #minFontSample {
-        font-family: standard;
-      }
-
       select {
         width: 100%;
-      }
-
-      #footer > button {
-        padding-inline-start: 9px;
-        padding-inline-end: 9px;
-      }
-
-      #footer > #apply-settings {
-        padding-inline-start: 17px;
-        padding-inline-end: 17px;
       }
 
       #apply-settings:enabled {
@@ -197,8 +178,8 @@ limitations under the License.
       </div>
       <div class="content-area" id="reset-this-script-overlay-dialog-content"></div>
       <div class="action-area">
-        <button id="reset-this-script-cancel">Cancel</button>
-        <button id="reset-this-script-ok">Reset</button>
+        <button type="button" id="reset-this-script-cancel">Cancel</button>
+        <button type="button" id="reset-this-script-ok">Reset</button>
       </div>
     </dialog>
 
@@ -210,8 +191,8 @@ limitations under the License.
         Are you sure you want to reset all settings?
       </div>
       <div class="action-area">
-        <button id="reset-all-cancel">Cancel</button>
-        <button id="reset-all-ok">Reset</button>
+        <button type="button" id="reset-all-cancel">Cancel</button>
+        <button type="button" id="reset-all-ok">Reset</button>
       </div>
     </dialog>
     <div class="page">
@@ -328,15 +309,15 @@ limitations under the License.
         </div>
       </section>
       <section>
-        <button id="apply-settings">Apply settings</button>
-        <button id="reset-this-script-button">
+        <button type="button" id="apply-settings">Apply settings</button>
+        <button type="button" id="reset-this-script-button">
           Reset settings for this script
         </button>
-        <button id="reset-all-button">Reset all settings</button>
+        <button type="button" id="reset-all-button">Reset all settings</button>
       </section>
       <section id="footer">
-        <button id="import-settings">Import settings file</button>
-        <button id="export-settings">Export current settings</button>
+        <button type="button" id="import-settings">Import settings file</button>
+        <button type="button" id="export-settings">Export current settings</button>
       </section>
     </div>
   </body>
